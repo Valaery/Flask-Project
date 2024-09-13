@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classifier</title>
+</head>
+<body>
+    <h1>Image Classifier Cat or Dog</h1>
+    <h2> Selecciona la imagen de un perro o un gato desde tus archivos, subela y el modelo predictivo determinará si es un perro o un gato! (acuracy 0,81)</h2>
+    <form method="POST" enctype="multipart/form-data" id="upload-form">
+        <input type="file" name="file" id="file-input" accept="image/*" required>
+        <button type="submit">Cargar y Predecir</button>
+    </form>
+    <div id="result" style="margin-top: 20px;">
+        <!-- Aquí se mostrará la imagen y el resultado -->
+    </div>
+    <script>
+        document.getElementById('upload-form').onsubmit = function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            fetch('/', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.text()).then(result => {
+                document.getElementById('result').innerHTML = result;
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        };
+
+        document.getElementById('file-input').onchange = function(event) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.maxWidth = '300px';
+                document.getElementById('result').innerHTML = '';
+                document.getElementById('result').appendChild(img);
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        };
+    </script>
+</body>
+</html>
